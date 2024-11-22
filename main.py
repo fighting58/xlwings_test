@@ -114,46 +114,49 @@ def merge_cells(sheet, range_address):
 
 
 # 엑셀 애플리케이션 시작
-app = xw.App(visible=False)
+app = xw.App(visible=True)
 
 # 데이터 파일 열기
 data_wb = app.books.open('data.xlsx')  # data.xlsx 파일 경로 입력
+data_ws = data_wb.sheets[0]
 
-# "Report" 시트가 존재하는지 확인하고 삭제
-if 'Report' in [sheet.name for sheet in data_wb.sheets]:
-    data_wb.sheets['Report'].delete()
+# data_ws.range('A1').value = '이름'
 
-template_sheet = data_wb.sheets['@Report']
-template_sheet.copy(after=data_wb.sheets[-1])  # 마지막 시트 뒤에 복제
-report_sheet = data_wb.sheets[-1]  # 방금 복제한 시트를 가져옴
-report_sheet.name = 'Report'  # 시트 이름 변경
+# # "Report" 시트가 존재하는지 확인하고 삭제
+# if 'Report' in [sheet.name for sheet in data_wb.sheets]:
+#     data_wb.sheets['Report'].delete()
+
+# template_sheet = data_wb.sheets['@Report']
+# template_sheet.copy(after=data_wb.sheets[-1])  # 마지막 시트 뒤에 복제
+# report_sheet = data_wb.sheets[-1]  # 방금 복제한 시트를 가져옴
+# report_sheet.name = 'Report'  # 시트 이름 변경
 
 
-# data.xlsx의 데이터 읽기 (2번째 행부터)
-data_range = data_wb.sheets[0].range('A2').expand()  # 첫 번째 시트의 데이터 범위 확장 (헤더 제외)
-data_count = data_range.rows.count  # 데이터의 행 수
+# # # data.xlsx의 데이터 읽기 (2번째 행부터)
+# data_range = data_wb.sheets[0].range('A2').expand()  # 첫 번째 시트의 데이터 범위 확장 (헤더 제외)
+# data_count = data_range.rows.count  # 데이터의 행 수
 
-# 템플릿 범위의 값을 A1 셀에 삽입
-current_row = 1  # 현재 행 번호
+# # 템플릿 범위의 값을 A1 셀에 삽입
+# current_row = 1  # 현재 행 번호
 
-# 데이터 복사 및 추가
-for i in range(data_count):
-    # 템플릿 범위를 복사
-    template_range = template_sheet.range('1:17')
-    template_range.copy()
+# # 데이터 복사 및 추가
+# for i in range(data_count):
+#     # 템플릿 범위를 복사
+#     template_range = template_sheet.range('1:17')
+#     template_range.copy()
     
-    # A1 셀에 삽입하기 전에 기존 데이터 아래로 밀기
-    report_sheet.range('A1').insert(shift='down')  # A1 셀에 있는 내용을 아래로 밀기
+#     # A1 셀에 삽입하기 전에 기존 데이터 아래로 밀기
+#     report_sheet.range('A1').insert(shift='down')  # A1 셀에 있는 내용을 아래로 밀기
     
-    # 복사한 범위를 A1 셀에 붙여넣기
-    report_sheet.range('A1').paste()
+#     # 복사한 범위를 A1 셀에 붙여넣기
+#     report_sheet.range('A1').paste()
 
-# data.xlsx의 "B2" 셀의 값을 "Report" 시트의 "B5" 셀에 복사
-value_to_copy = data_wb.sheets[0].range('B2').value  # "B2" 셀의 값 가져오기
-report_sheet.range('B5').value = value_to_copy  # "B5" 셀에 값 복사
+# # data.xlsx의 "B2" 셀의 값을 "Report" 시트의 "B5" 셀에 복사
+# value_to_copy = data_wb.sheets[0].range('B2').value  # "B2" 셀의 값 가져오기
+# report_sheet.range('B5').value = value_to_copy  # "B5" 셀에 값 복사
 
-set_inner_borders_to_thin(report_sheet, "A1:F17", thickness=2)
-set_outer_border_to_medium(report_sheet, "A1:F17", thickness=3)
+set_inner_borders_to_thin(data_ws, "A1:F17", thickness=2)
+set_outer_border_to_medium(data_ws, "A1:F17", thickness=3)
 
 # 작업 완료 후 워크북 저장
 data_wb.save()

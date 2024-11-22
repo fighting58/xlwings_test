@@ -57,13 +57,13 @@ class ExcelTableWidget(QTableWidget):
     def load_excel_data(self, file_path):
         # Open the Excel workbook
         wb = xw.Book(file_path)
-        sheet = wb.sheets['sheet1']
+        sheet = wb.sheets[0]
 
         # Read data into pandas DataFrame
-        df = sheet.range('A1:G19').options(pd.DataFrame, header=1, index=False).value
+        df = sheet.range('A1:U19').options(pd.DataFrame, header=1, index=False).value
         
         # Sort DataFrame by 'Subject' column
-        df_sorted = df.sort_values(by='subject')
+        df_sorted = df.sort_values(by='번호')
 
         # Prepare data for TableWidget (include headers)
         data = [df_sorted.columns.tolist()] + df_sorted.values.tolist()
